@@ -1,9 +1,8 @@
 flask
 flask_cors
 pychromecast
+dbus-python
 pillow
 opencv-python
 requests
 numpy
-pychromecast
-dbus-python
