@@ -5,4 +5,5 @@ pillow
 opencv-python
 requests
 numpy
-
+pychromecast
+dbus-python
