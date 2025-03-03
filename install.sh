@@ -11,7 +11,7 @@ sudo systemctl enable avahi-daemon
 sudo systemctl restart avahi-daemon
 
 # Define GitHub repo
-GITHUB_REPO="https://github.com/robword/chromecast_wallpaper.git"
+GITHUB_REPO="https://github.com/YOUR_USERNAME/chromecast_wallpaper.git"
 INSTALL_DIR="$HOME/chromecast_wallpaper"
 
 # Clone the project into the user's home directory
@@ -30,8 +30,34 @@ echo "Installing Python dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
+# Create systemd service file
+echo "Creating systemd service..."
+SERVICE_FILE="/etc/systemd/system/chromecast_manager.service"
+sudo bash -c "cat > $SERVICE_FILE" <<EOF
+[Unit]
+Description=Chromecast Display Manager
+After=network.target
+
+[Service]
+User=$USER
+WorkingDirectory=$INSTALL_DIR
+ExecStart=$INSTALL_DIR/venv/bin/python $INSTALL_DIR/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd, enable and start the service
+echo "Enabling and starting Chromecast Manager service..."
+sudo systemctl daemon-reload
+sudo systemctl enable chromecast_manager.service
+sudo systemctl start chromecast_manager.service
+
 # Provide instructions to the user
 echo "✅ Installation complete!"
-echo "➡️  To activate the environment, run: source $INSTALL_DIR/venv/bin/activate"
-echo "➡️  To start the Flask app, run: python $INSTALL_DIR/app.py"
-echo "➡️  To run the wallpaper update script, run: python $INSTALL_DIR/chromecast_wallpaper.py"
+echo "➡️  The Flask app is running as a systemd service."
+echo "➡️  To check the service status, run: sudo systemctl status chromecast_manager.service"
+echo "➡️  To restart the service, run: sudo systemctl restart chromecast_manager.service"
+echo "➡️  To stop the service, run: sudo systemctl stop chromecast_manager.service"
+
