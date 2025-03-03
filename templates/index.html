@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromecast Display Manager</title>
+    <script>
+        async function discoverChromecasts() {
+            const response = await fetch("/discover");
+            const data = await response.json();
+            const list = document.getElementById("deviceList");
+            list.innerHTML = "";
+            data.devices.forEach(device => {
+                const checkbox = `<label><input type="checkbox" value="${device}"> ${device}</label><br>`;
+                list.innerHTML += checkbox;
+            });
+        }
+
+        async function saveSelection() {
+            const selected = [...document.querySelectorAll("#deviceList input:checked")]
+                            .map(cb => cb.value);
+            await fetch("/save", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ devices: selected })
+            });
+            alert("Saved Chromecast selection!");
+        }
+
+        window.onload = discoverChromecasts;
+    </script>
+</head>
+<body>
+    <h1>Chromecast Display Manager</h1>
+    <button onclick="discoverChromecasts()">Refresh Chromecast List</button>
+    <div id="deviceList"></div>
+    <button onclick="saveSelection()">Save Selection</button>
+</body>
+</html>
