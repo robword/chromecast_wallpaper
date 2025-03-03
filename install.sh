@@ -11,7 +11,7 @@ sudo systemctl enable avahi-daemon
 sudo systemctl restart avahi-daemon
 
 # Define GitHub repo
-GITHUB_REPO="https://github.com/YOUR_USERNAME/chromecast_wallpaper.git"
+GITHUB_REPO="https://github.com/robword/chromecast_wallpaper.git"
 INSTALL_DIR="$HOME/chromecast_wallpaper"
 
 # Clone the project into the user's home directory
